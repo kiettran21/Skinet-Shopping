@@ -12,6 +12,8 @@ using SQLitePCL;
 using Core.Specifications;
 using AutoMapper;
 using API.Dtos;
+using Core.Params;
+using Core.Pagination;
 
 namespace API.Controllers
 {
@@ -37,13 +39,24 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IReadOnlyList<ProductReturnDto>>> GetProducts()
+        public async Task<ActionResult<Pagination<ProductReturnDto>>> GetProducts(
+            [FromQuery] ProductParams productParams
+        )
         {
-            ProductBrandTypesSpecifications specifications = new ProductBrandTypesSpecifications();
+            // Pagination Products
+            var countSpec = new ProductWithFiltersForCountSpecificication(productParams);
+
+            var count = await repoProduct.CountAsync(countSpec);
+
+            // Get Products
+            ProductBrandTypesSpecifications specifications = new(productParams);
 
             var products = await repoProduct.GetAllWithSpec(specifications);
 
-            return Ok(mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductReturnDto>>(products));
+            var data = mapper.Map<IReadOnlyList<Product>, IReadOnlyList<ProductReturnDto>>(products);
+
+            return Ok(new Pagination<ProductReturnDto>(productParams.PageIndex,
+                productParams.PageSize, count, data));
         }
 
         [HttpGet("{id}")]
