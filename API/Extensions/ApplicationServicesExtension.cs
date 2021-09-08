@@ -14,6 +14,9 @@ namespace API.Exttensions
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            // Add Service Basket repository
+            services.AddScoped<IBasketRepository, BasketRepository>();
+
             services.AddAutoMapper(typeof(MapperProfile));
 
             // Create JWT service
