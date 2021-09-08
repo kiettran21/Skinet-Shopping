@@ -1,6 +1,7 @@
 using API.Helpers;
 using Core.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace API.Exttensions
@@ -14,6 +15,9 @@ namespace API.Exttensions
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
             services.AddAutoMapper(typeof(MapperProfile));
+
+            // Create JWT service
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }
