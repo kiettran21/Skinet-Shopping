@@ -14,6 +14,7 @@ using AutoMapper;
 using API.Dtos;
 using Core.Params;
 using Core.Pagination;
+using API.Helpers;
 
 namespace API.Controllers
 {
@@ -39,6 +40,7 @@ namespace API.Controllers
         }
 
         [HttpGet]
+        [Cached(600)]
         public async Task<ActionResult<Pagination<ProductReturnDto>>> GetProducts(
             [FromQuery] ProductParams productParams
         )
@@ -60,6 +62,7 @@ namespace API.Controllers
         }
 
         [HttpGet("{id}")]
+        [Cached(600)]
         public async Task<ActionResult<ProductReturnDto>> GetProduct(int id)
         {
             var specifications = new ProductBrandTypesSpecifications(id);
@@ -70,12 +73,14 @@ namespace API.Controllers
         }
 
         [HttpGet("types")]
+        [Cached(600)]
         public async Task<ActionResult<IReadOnlyList<ProductType>>> GetProductTypes()
         {
             return Ok(await repoType.GetAllAsync());
         }
 
         [HttpGet("brands")]
+        [Cached(600)]
         public async Task<ActionResult<IReadOnlyList<ProductBrand>>> GetProductBrands()
         {
             return Ok(await repoBrand.GetAllAsync());
