@@ -16,6 +16,9 @@ namespace API.Helpers
 
             // Revert Map help can reverse mapper
             CreateMap<Address, AddressDto>().ReverseMap();
+
+            // Create Mapper with order aggerate
+            CreateMap<AddressDto, Core.Entities.OrderAggregate.Address>();
         }
     }
 }

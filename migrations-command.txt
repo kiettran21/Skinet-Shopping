@@ -1,0 +1,9 @@
+1. Create Migrations with Repository
+
+dotnet ef migrations add <Name> -p Infrastructure -s API -c StoreContext -o Data/Migrations
+or
+dotnet ef migrations add <Name> -p Infrastructure -s API -c StoreContext
+
+2. Create Migrations with Identity
+
+dotnet ef migrations add <Name> -p Infrastructure -s API -c StoreContext -o Identity/Migrations

@@ -11,7 +11,6 @@ namespace Infrastructure.Data
     public class GenericRepository<T> : IGenericRepository<T>
     where T : BaseEntity
     {
-
         public readonly StoreContext context;
 
         public GenericRepository(StoreContext context)
@@ -42,9 +41,25 @@ namespace Infrastructure.Data
             return await ApplySpecification(spec).CountAsync();
         }
 
-        public IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        private IQueryable<T> ApplySpecification(ISpecification<T> spec)
         {
             return SpecificationEvaluator<T>.GetQuery(context.Set<T>().AsQueryable(), spec);
+        }
+
+        public void Add(T entity)
+        {
+            context.Set<T>().Add(entity);
+        }
+
+        public void Update(T entity)
+        {
+            context.Set<T>().Attach(entity);
+            context.Entry(entity).State = EntityState.Modified;
+        }
+
+        public void Delete(T entity)
+        {
+            context.Set<T>().Remove(entity);
         }
     }
 }

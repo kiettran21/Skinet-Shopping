@@ -14,8 +14,14 @@ namespace API.Exttensions
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
 
+            // Resgister Unit Of Work
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
             // Add Service Basket repository
             services.AddScoped<IBasketRepository, BasketRepository>();
+
+            // Add Order Service
+            services.AddScoped<IOrderService, OrderService>();
 
             services.AddSingleton<IResponseCacheService, ResponseCacheService>();
 
