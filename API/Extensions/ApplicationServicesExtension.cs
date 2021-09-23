@@ -27,6 +27,9 @@ namespace API.Exttensions
 
             services.AddAutoMapper(typeof(MapperProfile));
 
+            // Send Mail
+            services.AddScoped<IMailSenderService, MailSenderService>();
+
             // Create JWT service
             services.AddScoped<ITokenService, TokenService>();
 
