@@ -76,6 +76,21 @@ namespace Infrastructure.Data
 
                     await context.SaveChangesAsync();
                 }
+
+                if (!context.Ratings.Any())
+                {
+                    var ratingData = File.ReadAllText("../Infrastructure/Data/SeedData/ratings.json");
+
+                    //Parse JSON to Object
+                    var ratings = JsonSerializer.Deserialize<List<Rating>>(ratingData);
+
+                    foreach (var item in ratings)
+                    {
+                        context.Ratings.Add(item);
+                    }
+
+                    await context.SaveChangesAsync();
+                }
             }
             catch (Exception ex)
             {

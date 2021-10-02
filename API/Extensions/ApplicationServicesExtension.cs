@@ -30,6 +30,9 @@ namespace API.Exttensions
             // Send Mail
             services.AddScoped<IMailSenderService, MailSenderService>();
 
+            // Rating Service
+            services.AddScoped<IRatingService, RatingService>();
+
             // Create JWT service
             services.AddScoped<ITokenService, TokenService>();
 

@@ -25,6 +25,7 @@ namespace Infrastructure.Data
         public DbSet<DeliveryMethod> DeliveryMethods { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<Order> Orders { get; set; }
+        public DbSet<Rating> Ratings { get; set; }
 
         /// <summary>
         /// Responsiblity to migration database.

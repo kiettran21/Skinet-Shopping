@@ -19,6 +19,9 @@ namespace API.Helpers
 
             // Create Mapper with order aggerate
             CreateMap<AddressDto, Core.Entities.OrderAggregate.Address>();
+
+            // Create Mapper with rating
+            CreateMap<Rating, RatingReturnDto>();
         }
     }
 }
