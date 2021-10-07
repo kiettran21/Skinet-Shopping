@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Linq;
 using Core.Entities;
 using Core.Interfaces;
+using Core.Params;
 using Core.Specifications;
 
 namespace Infrastructure.Services
@@ -84,13 +86,52 @@ namespace Infrastructure.Services
             return rating;
         }
 
-         public async Task<bool> HasExistedRating(string userId, int? productId, int? ratingId)
-         {
+        public async Task<bool> HasExistedRating(string userId, int? productId, int? ratingId)
+        {
             // 1. Check user has rated yet
             var specification = new RatingWithUserAndProductSpecification(ratingId, userId, productId);
             var rating = await unitOfWork.Repository<Rating>().GetEntityWithSpec(specification);
 
             return rating != null;
-         }
+        }
+
+        public async Task<IReadOnlyList<Rating>> GetRatingsWithSpec(RatingParams param)
+        {
+            var spec = new RatingWithUserAndProductSpecification(param);
+
+            var ratings = await unitOfWork.Repository<Rating>().GetAllWithSpec(spec);
+
+            return ratings;
+        }
+
+        public async Task<int> CountRatingsWithSpec(RatingParams param)
+        {
+            var spec = new RatingWithUserAndProductSpecification(param);
+
+            var count = await unitOfWork.Repository<Rating>().CountAsync(spec);
+
+            return count;
+        }
+
+        // Find Avg => 5 * rating5 + 4 * rating4 + 3 * rating3 ... / (rating5 + rating4 ...)
+        public decimal GetAverageRating(IReadOnlyList<Rating> ratings)
+        {
+            Dictionary<int, int> users = new();
+            decimal sumRating = 0;
+
+            // Find Rating number
+            for (int i = 0; i < 5; i++)
+            {
+                users.Add(i + 1, ratings.Count(r => r.RatingNumber == i + 1));
+            }
+
+            // Calc Average rating
+            foreach (KeyValuePair<int, int> entry in users)
+            {
+                sumRating += entry.Key * entry.Value;
+            }
+
+            return sumRating == 0 ? 0 : sumRating / users.Count;
+        }
     }
 }

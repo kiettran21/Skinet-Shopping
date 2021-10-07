@@ -10,6 +10,7 @@ using API.Exttensions;
 using API.Dtos;
 using Microsoft.AspNetCore.Http;
 using AutoMapper;
+using Core.Params;
 
 namespace API.Controllers
 {
@@ -40,6 +41,23 @@ namespace API.Controllers
             var ratings = await ratingService.GetRatings(user.Id);
 
             return ratings != null ? Ok(ratings) : NotFound();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("products/{id}")]
+        public async Task<ActionResult<RatingsReturnDto>> GetRatingsByProduct(string id, [FromQuery] RatingParams param)
+        {
+            // Alternative query string product and want provide params on link
+            param.ProductId = id;
+
+            var count = await ratingService.CountRatingsWithSpec(param);
+
+            var ratings = await ratingService.GetRatingsWithSpec(param);
+
+            var averageRating = ratingService.GetAverageRating(ratings);
+
+            return new RatingsReturnDto { Ratings = ratings, Count = count, AverageRating = averageRating };
         }
 
         [HttpGet("{id}")]
